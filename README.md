@@ -1,4 +1,4 @@
-This is a simple program to calculate terms in "nim-world".
+This is a simple program to calculate terms in the "nim-world".
 
 Parenthesises aren't supported yet (v0.1).
 
@@ -11,5 +11,7 @@ TODO:
 - Port to TI NSPIRE
 
 LICENSE:
+
 MIT (https://opensource.org/licenses/MIT)
+
 [In short: Do whatever you want with this.]
