@@ -1,0 +1,290 @@
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+#include <iostream>
+//#include <stdlib.h>
+//#include <time.h>
+
+
+#define ULL		unsigned long long
+#define debug	if(DO_DEBUG)cout
+#define DFUQ	2168027039058355991
+
+const bool DO_DEBUG = true;
+
+using namespace std;
+
+ULL nmul(ULL a, ULL b);
+ULL nmul_2_n(ULL n, ULL m);
+ULL nproduct(ULL *p, unsigned int size);
+unsigned char po2(ULL n, ULL *p);
+ULL bp2(ULL n);
+ULL pseudo_log2(ULL n);
+bool is_fp(ULL n);
+void print_ULL_array(ULL l[], unsigned int size);
+void clear_list(ULL *p, unsigned int size);
+unsigned int in_array(ULL n, ULL *p, unsigned int size);
+//void sort_list_fp(ULL *p, unsigned int size);
+
+int main()
+{
+	ULL a,b;//l[64];
+	
+	//srand(time(NULL));
+	
+	while(1)
+	{
+		/*
+		for(unsigned int i = 0; i < 64; i++)
+		{
+			l[i] = rand();
+		}
+		cout << "Unsorted:" << endl;
+		print_ULL_array(l,64);
+		cout << "Sorted:" << endl;
+		sort_list(l,64);
+		print_ULL_array(l,64);
+		cin.ignore(); 
+		*/
+		
+		cout << "a = ";
+		cin >> a;
+		cout << "b = ";
+		cin >> b;
+		
+		cout << a << " (x) " << b << " = "<< nmul(a,b) << endl << endl;
+		
+		//cout << "pseudolog2(" << a << ") = " << pseudo_log2(a) << endl << endl;
+		
+		/*
+		ULL list[64];
+		clear_list(list,64);
+		cout << "Powers of 2 in " << a << " are:" << endl;
+		print_ULL_array(list,po2(a, list));
+		cout << "\n" << endl;
+		*/
+		
+	 	//cout << "Biggest power of two in  " << a << "  is  " << bp2(a) << endl << endl;
+		
+		/*
+		cout << "b= ";
+		cin >> b;
+		cout << a << " (x) " << b << " = " << nmul(a,b) << endl;
+		cout << endl;
+		*/
+	}
+	
+	return 0;
+}
+
+ULL nmul(ULL a, ULL b)
+{
+	debug<<"\n+NMUL  ["<<a<<", "<<b<<"]"<<endl;
+	//	0 (x) n
+	if( !a || !b )
+	{
+		debug<<"+-ZERO"<<endl;
+		return 0;
+	}
+	
+	// 1 (x) b
+	if( a == 1 ) {debug<<"+-B"<<endl;return b;}
+	if( b == 1 ) {debug<<"+-A"<<endl;return a;}
+	
+	//	FP (x) FP
+	if( is_fp(a) && is_fp(b))
+	{
+		debug<<"++FP"<<endl;
+		// a == b
+		if(a == b)
+		{
+			debug<<" +-SQUARE"<<endl;
+			return 3 * a / 2;
+		}// WHY C++, WHY DO YOU ALLOW BRACKETS TO BE MISSING FOR A ONE-LINER! TWO FUCKING CHARACTERS! Compiling works fine, Runs fine, returns wrong result. Infuriating!
+		
+		return a * b;
+	}
+	
+	// 2^n (x) b || a (x) 2^n
+	
+	if(bp2(a) == a && bp2(b) == b)
+	{
+		debug<<"++AB2n"<<endl;
+		return nmul_2_n(a,b);
+	}
+	
+	// a (x) b
+	debug<<"+-A(X)B"<<endl;
+	ULL po2A[64],po2B[64];
+	clear_list(po2A,64);
+	clear_list(po2B,64);
+	ULL result = 0;
+	unsigned int sizeA,sizeB;
+	sizeA = po2(a,po2A);
+	sizeB = po2(b,po2B);
+	for(unsigned int i = 0; i < sizeA; i++)
+	{
+		for(unsigned int j = 0; j < sizeB; j++)
+		{
+			result ^= nmul(po2A[i],po2B[j]);
+		}
+	}
+	return result;
+}
+
+ULL nmul_2_n(ULL n, ULL m)
+{
+	debug<<"  NMUL_2_N  ["<<n<<", "<<m<<"]"<<endl;
+	ULL logN = pseudo_log2(n);
+	ULL logM = pseudo_log2(m);
+	ULL po2LogN[6],po2LogM[6];
+	clear_list(po2LogN,6);
+	clear_list(po2LogM,6);
+	po2(logN,po2LogN);
+	po2(logM,po2LogM);
+	for(unsigned int i = 0; i < 6; i++)
+	{
+		po2LogN[i] = 1<<po2LogN[i];
+		po2LogM[i] = 1<<po2LogM[i];
+	}
+	ULL fps_products[5];
+	for(unsigned char c = 0; c < 5; c++)
+	{
+		unsigned int count = in_array(1<<(1<<c),po2LogN,6);
+		count += in_array(1<<(1<<c),po2LogM,6);
+		fps_products[c] = 1;
+		for(unsigned int i = 0; i < count; i++)
+		{
+			fps_products[c] = nmul(fps_products[c], 1<<(1<<c));
+		}
+	}
+	return nproduct(fps_products,5);
+}
+
+ULL nproduct(ULL *p, unsigned int size)
+{
+	ULL result = 1;
+	for(unsigned int i = 0; i < size; i++)
+	{
+		result = nmul(result, p[i]);
+	}
+	return result;
+}
+
+unsigned char po2(ULL n, ULL *p) // Provided array should at least be of size  ceiling(log2(max_n))
+{
+	debug<<"  PO2  ["<<n<<"]"<<endl;
+	unsigned char i = 0;
+	ULL c = 1;
+	do
+	{
+//		debug << c << endl;
+		if(n & c)
+		{
+			p[i] = c;
+			i++;
+		}
+		c*=2;
+	}while(c);
+	return i;
+}
+
+ULL bp2(ULL n)
+{
+	debug<<"  BP2  ["<<n<<"]"<<endl;
+	ULL c = 9223372036854775808; // 2^63 -- TODO: probably not the best way, throws warning; Don't care
+	if(n & c) return c;
+	do
+	{
+		c/=2;
+		if(n & c) return c;
+	}while(c != 1);
+	return 0;
+}
+
+ULL pseudo_log2(ULL n)
+{
+	debug<<"  PSEUDO_LOG  ["<<n<<"]"<<endl;
+	// Not really log2, but will only be used if a = 2^n anyway. Allows me to get away without any dependecies (other than output)
+	unsigned char i = 0;
+	ULL c = 1;
+	do
+	{
+//		debug << c << endl;
+		if(n & c)
+		{
+			return i;
+		}
+		i++;
+		c*=2;
+	}while(c);
+	return DFUQ;
+}
+
+bool is_fp(ULL n)
+{
+//	debug<<"  IS_FP  ["<<n<<"]"<<endl;
+	return (n == 1 || n == 2 || n == 4 || n == 16 || n == 256 || n == 65536 || n == 4294967296);
+}
+
+void print_ULL_array(ULL l[], unsigned int size)
+{
+	for(unsigned int i = 0; i < size; i++)
+	{
+		cout << l[i] << ", ";
+	}
+	cout << endl;
+}
+
+void clear_list(ULL *p, unsigned int size)
+{
+	//debug<<"  CLEAR_LIST"<<endl;
+	for(unsigned int i = 0; i < size; i++)
+	{
+		p[i]=0;
+	}
+}
+
+unsigned int in_array(ULL n, ULL *p, unsigned int size)
+{
+	unsigned int r = 0;
+	for(unsigned int i = 0; i < size; i++)
+	{
+		if(p[i] == n) r++;
+	}
+	return r;
+}
+/*
+void sort_list_fp(ULL *p, unsigned int size)
+{
+	bool done = 0;
+	while(!done)
+	{
+		done = 1;
+		for(unsigned int i = 1; i < size; i++)
+		{
+			if((!is_fp(p[i-1]) && is_fp(p[i])) || (is_fp(p[i]) && is_fp(p[i-1]) && p[i-1] < p[i]))
+			{
+				ULL tmp = p[i];
+				p[i] = p[i-1];
+				p[i-1] = tmp;
+				done = 0;
+			}
+		}
+	}
+}
+*/
