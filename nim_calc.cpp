@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string> // is this really required? (Seems like it)
 
-#define ULL		unsigned long long
-#define debug	if(DO_DEBUG)cout
-#define DFUQ	2168027039058355991
+#define ULL				unsigned long long // Works only with C++11; Remove one "long" to downgrade
+#define debug			if(DO_DEBUG)cout
+#define DFUQ			2362363213 // Random constant. Used for "Bad input".
+#define MAX_POW2	0x8000000000000000 // 2^63
 
-const bool DO_DEBUG = 0;
+const bool DO_DEBUG = 0; // Enables/Disables debug output. Should be disabled.
 
 using namespace std;
 
@@ -37,7 +38,9 @@ int main()
 				<<	"-------------------------------\n"
 				<<	"Numbers are in base 10, use \"+\" for NIM-Addition (XOR)\n"
 				<<	"and \"x\" for NIM-Multiplication. Parathesises aren't supported (yet)\n"
-				<<	"Example: \"8x8+2x4x16\"\n" << endl;
+				<<	"Example: \"8x8+2x4x16\"\n"
+				<<	"Type \"exit\" to exit\n"
+				<< endl;
 	
 	string currTerm;
 	ULL result;
@@ -45,6 +48,10 @@ int main()
 	{
 		cout << ">>";
 		cin >> currTerm;
+		if(currTerm == "exit")
+		{
+			return 0;
+		}
 		result = evaluate_term(currTerm);
 		if(result == DFUQ)
 		{
@@ -256,7 +263,7 @@ ULL product(ULL *p, unsigned int size)
 	return result;
 }
 
-unsigned char po2(ULL n, ULL *p) // Provided array should at least be of size  ceiling(log2(max_n))
+unsigned char po2(ULL n, ULL *p) // Provided array should at least be of size ceiling(log2(max_n))
 {
 	debug<<"  PO2  ["<<n<<"]"<<endl;
 	unsigned char i = 0;
@@ -277,7 +284,7 @@ unsigned char po2(ULL n, ULL *p) // Provided array should at least be of size  c
 ULL bp2(ULL n)
 {
 	debug<<"  BP2  ["<<n<<"]"<<endl;
-	ULL c = 9223372036854775808; // 2^63 -- TODO: probably not the best way, throws warning; Don't care
+	ULL c = MAX_POW2; // 2^63 -- TODO: probably not the best way, throws warning; Don't care
 	if(n & c) return c;
 	do
 	{
