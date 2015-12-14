@@ -14,7 +14,8 @@ The code is ugly, inefficient and undocumented, but it does the job.
 - msvcr120d.dll
 
 ##### Run:
-- Execute Nim.exe
+
+`Execute Nim.exe`
 
 
 #### ...Linux (Debian, Ubuntu):
@@ -23,7 +24,8 @@ The code is ugly, inefficient and undocumented, but it does the job.
 - nim_calc
 
 ##### Run:
-- Execute nim_calc (In Terminal)
+
+`./nim_calc`
 
 
 #### ...Linux (Any):
@@ -33,8 +35,10 @@ The code is ugly, inefficient and undocumented, but it does the job.
 - compile.sh
 
 ##### Run:
-- Run compile.sh (In Terminal)
-- Execute nim_calc (In Terminal)
+```
+./compile.sh
+./nim_calc
+```
 
 
 #### ...Android:
