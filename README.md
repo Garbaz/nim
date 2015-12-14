@@ -49,7 +49,7 @@ TODO
 - Port to Android
 - Port to TI NSPIRE
 
-LICENSE:
+### LICENSE:
 
 MIT (https://opensource.org/licenses/MIT)
 
