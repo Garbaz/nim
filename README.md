@@ -16,6 +16,8 @@ Required files:
 Run:
 - Execute Nim.exe
 
+
+
 ...Linux (Debian, Ubuntu):
 
 Required files:
@@ -23,6 +25,8 @@ Required files:
 
 Run:
 - Execute nim_calc (In Terminal)
+
+
 
 ...Linux (Any):
 
@@ -34,9 +38,13 @@ Run:
 - Run compile.sh (In Terminal)
 - Execute nim_calc (In Terminal)
 
+
+
 ...Android:
 
 TODO
+
+
 
 TODO:
 - Add support for parenthesises
