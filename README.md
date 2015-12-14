@@ -49,6 +49,7 @@ TODO
 
 ### TODO:
 - Add support for parenthesises
+- Evaluate params (Non-Interactive mode)
 - Allow spaces (Just clear them out)
 - Port to Android
 - Port to TI NSPIRE
