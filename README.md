@@ -15,7 +15,7 @@ The code is ugly, inefficient and undocumented, but it does the job.
 
 ##### Run:
 
-`Execute Nim.exe`
+`Nim.exe`
 
 
 #### ...Linux (Debian, Ubuntu):
