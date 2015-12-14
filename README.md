@@ -43,15 +43,20 @@ The code is ugly, inefficient and undocumented, but it does the job.
 
 #### ...Android:
 
-TODO
+##### Required files:
+- NimCalc.apk
 
+##### Run:
+
+- Enable installing non-playstore apps (Settings->Security->"Unknown Source")
+- Install .apk app
 
 
 ### TODO:
 - Add support for parenthesises
 - Evaluate params (Non-Interactive mode)
 - Allow spaces (Just clear them out)
-- Port to Android
+- Port to Android (DONE, finally, took way too long. I hate Java)
 - Port to TI NSPIRE
 
 ### LICENSE:
