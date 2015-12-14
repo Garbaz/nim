@@ -6,30 +6,29 @@ The code is ugly, inefficient and undocumented, but it does the job.
 
 Run on...
 ...Windows:
-	Required files:
-	- Nim.exe
-	- msvcp120d.dll
-	- msvcr120d.dll
-	Run:
-	- Execute Nim.exe
-
+Required files:
+- Nim.exe
+- msvcp120d.dll
+- msvcr120d.dll
+Run:
+- Execute Nim.exe
 
 ...Linux (Debian, Ubuntu):
-	Required files:
-	- nim_calc
-	Run:
-	- Execute nim_calc (In Terminal)
+Required files:
+- nim_calc
+Run:
+- Execute nim_calc (In Terminal)
 
 ...Linux (Any):
-	Required files:
-	- nim_calc.cpp
-	- compile.sh
-	Run:
-	- Run compile.sh (In Terminal)
-	- Execute nim_calc (In Terminal)
+Required files:
+- nim_calc.cpp
+- compile.sh
+Run:
+- Run compile.sh (In Terminal)
+- Execute nim_calc (In Terminal)
 
 ...Android:
-	TODO
+TODO
 
 TODO:
 - Add support for parenthesises
