@@ -4,43 +4,40 @@ Parenthesises aren't supported yet (v0.1).
 
 The code is ugly, inefficient and undocumented, but it does the job.
 
-Run on...
+# Run on...
 
-...Windows:
+## ...Windows:
 
-Required files:
+### Required files:
 - Nim.exe
 - msvcp120d.dll
 - msvcr120d.dll
 
-Run:
+### Run:
 - Execute Nim.exe
 
 
+## ...Linux (Debian, Ubuntu):
 
-...Linux (Debian, Ubuntu):
-
-Required files:
+### Required files:
 - nim_calc
 
-Run:
+### Run:
 - Execute nim_calc (In Terminal)
 
 
+## ...Linux (Any):
 
-...Linux (Any):
-
-Required files:
+### Required files:
 - nim_calc.cpp
 - compile.sh
 
-Run:
+### Run:
 - Run compile.sh (In Terminal)
 - Execute nim_calc (In Terminal)
 
 
-
-...Android:
+## ...Android:
 
 TODO
 
