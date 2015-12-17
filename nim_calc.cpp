@@ -220,17 +220,20 @@ ULL nmul_2_n(ULL n, ULL m)
 		po2LogM[i] = 1<<po2LogM[i];
 	}
 	ULL fps_products[5];
+	bool diff_fpow = 1;
 	for(unsigned char c = 0; c < 5; c++)
 	{
 		unsigned int count = in_array(1<<(1<<c),po2LogN,6);
 		count += in_array(1<<(1<<c),po2LogM,6);
+		if(count > 1) diff_fpow = 0;
 		fps_products[c] = 1;
 		for(unsigned int i = 0; i < count; i++)
 		{
 			fps_products[c] = nmul(fps_products[c], 1<<(1<<c));
 		}
 	}
-	return product(fps_products,5);
+	if(diff_fpow)return product(fps_products,5);
+	else return nproduct(fps_products,5);
 }
 
 ULL nproduct(ULL *p, unsigned int size)
