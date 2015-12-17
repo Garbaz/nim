@@ -61,6 +61,6 @@ The code is ugly, inefficient and undocumented, but it does the job.
 
 ### LICENSE:
 
-MIT (https://opensource.org/licenses/MIT)
+[MIT](https://opensource.org/licenses/MIT)
 
 [In short: Do whatever you want with this.]
