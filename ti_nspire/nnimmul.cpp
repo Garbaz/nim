@@ -1,17 +1,16 @@
-#include <iostream>
-#include <string> // is this really required? (Seems like it)
-
-#define ULL				unsigned long long // Works only with C++11; Remove one "long" to downgrade
-#define debug			if(DO_DEBUG)cout
-#define DFUQ			2362363213 // Random constant. Used for "Bad input".
-#define MAX_POW2	0x8000000000000000 // 2^63
-#define ADDCHAR		'+'
-#define MULCHAR		'x'
-
-const bool DO_DEBUG = 0; // Enables/Disables debug output. Should be disabled.
+#include <os.h>
+#include <nspireio/console.hpp>
+#include <string>
 
 using namespace std;
 
+#define ULL				unsigned long // Works only with C++11; Remove one "long" to downgrade. DONE
+#define DFUQ			236236321 // Random constant. Used for "Bad input". Probably not the best way.
+#define MAX_POW2	0x80000000 // 2^31
+#define ADDCHAR		'+'
+#define MULCHAR		'*'
+
+const bool DO_DEBUG = 0; // Enables/Disables debug output. Should be disabled once everything works.
 
 ULL evaluate_term(string term);
 ULL evaluate_product(string term);
@@ -19,6 +18,7 @@ ULL strtoULL(string s);
 unsigned char charToBase10(char c);
 ULL tenToThe(unsigned char power);
 char allowed_chars[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ADDCHAR, MULCHAR, '\0'};
+nio::console c;
 //------------------------------------------
 ULL nmul(ULL a, ULL b);
 ULL nmul_2_n(ULL n, ULL m);
@@ -34,36 +34,56 @@ void clear_list(ULL *p, unsigned int size);
 unsigned int in_array(ULL n, ULL *p, unsigned int size);
 bool elem(char c, char *p, unsigned int size);
 
+/*
+int main(void)
+{
+	clrscr();
+	nio::console c;
+	c << "Hello World!" << endl;
+	c << ">";
+	char* name;
+	c.getline(name, 16);
+	c << "Hello " << name << endl;
+	wait_key_pressed();
+	return 0;
+}
+*/
+
 int main()
-{	
-	cout	<<	"NIM multiplication and addition\n"
-				<<	"-------------------------------\n"
-				<<	"Numbers are in base 10, use \"" << ADDCHAR <<"\" for NIM-Addition (XOR)\n"
-				<<	"and \""<< MULCHAR <<"\" for NIM-Multiplication. Parathesises aren't supported (yet)\n"
-				<<	"Example: \"8x8+2x4x16\"\n"
-				<<	"Type \"exit\" to exit\n"
-				<< endl;
+{
+	c			<<	"NIM multiplication and addition\n";
+	c			<<	"-------------------------------\n";
+	c			<<	"Numbers are in base 10, use \"+\" for NIM-Addition (XOR)\n";
+	c			<<	"and \"x\" for NIM-Multiplication. Parathesises aren't supported (yet)\n";
+	c			<<	"Example: \"8*8+2*4*16\"\n";
+	c			<<	"Type \"exit\" to exit\n";
+	c			<< endl;
 	
-	string currTerm;
+	char* currTerm = new char[256];
 	ULL result;
 	while(1)
 	{
-		cout << ">>";
-		cin >> currTerm;
-		if(currTerm == "exit")
+		c << ">>";
+		c.getline(currTerm,256);
+		if(string(currTerm) == "exit")
 		{
+			delete[] currTerm;
 			return 0;
 		}
-		result = evaluate_term(currTerm);
+		result = evaluate_term(string(currTerm));
 		if(result == DFUQ)
 		{
-			cout << "Invalid term!" << endl;
+			c << "Invalid term!" << endl;
 			continue;
 		}
-		cout << "= " << result << endl;
-		debug<<"--------------------------------------------\n\n" << endl;
+		c << "= ";
+		char* result_out = new char[10];
+		itoa(result,result_out,10);
+		c << result_out;
+		c << endl;
+		delete[] result_out;
 	}
-	
+	delete[] currTerm;
 	return 0;
 }
 
@@ -77,7 +97,6 @@ ULL evaluate_term(string term)
 	{
 		if(!elem(term[i], allowed_chars, 13))
 		{
-			debug<<"Invalid input term"<<endl;
 			return DFUQ;
 		}
 	}
@@ -154,27 +173,23 @@ ULL tenToThe(unsigned char power)
 
 ULL nmul(ULL a, ULL b)
 {
-	debug<<"\n+NMUL  ["<<a<<", "<<b<<"]"<<endl;
 	//	0 (x) n
 	if( !a || !b )
 	{
-		debug<<"+-ZERO"<<endl;
 		return 0;
 	}
 	
 	// 1 (x) b
-	if( a == 1 ) {debug<<"+-B"<<endl;return b;}
-	if( b == 1 ) {debug<<"+-A"<<endl;return a;}
+	if( a == 1 ) {return b;}
+	if( b == 1 ) {return a;}
 	
 	//	FP (x) FP
 	if( is_fp(a) && is_fp(b))
 	{
-		debug<<"++FP"<<endl;
 		// a == b
 		if(a == b)
 		{
-			debug<<" +-SQUARE"<<endl;
-			return (3 * a / 2);
+			return 3 * a / 2;
 		}// WHY C++, WHY DO YOU ALLOW BRACKETS TO BE MISSING FOR A ONE-LINER! TWO FUCKING CHARACTERS! Compiling works fine, Runs fine, returns wrong result. Infuriating!
 		
 		return a * b;
@@ -184,12 +199,10 @@ ULL nmul(ULL a, ULL b)
 	
 	if(bp2(a) == a && bp2(b) == b)
 	{
-		debug<<"++AB2n"<<endl;
 		return nmul_2_n(a,b);
 	}
 	
 	// a (x) b
-	debug<<"+-A(X)B"<<endl;
 	ULL po2A[64],po2B[64];
 	clear_list(po2A,64);
 	clear_list(po2B,64);
@@ -201,20 +214,14 @@ ULL nmul(ULL a, ULL b)
 	{
 		for(unsigned int j = 0; j < sizeB; j++)
 		{
-			//TODO: WASTE OF MEM, JUST FOR DEBUG
-			//ULL nmulres = nmul(po2A[i],po2B[j]);
-			//debug<<"\t\tNMULRES = " << nmulres << endl;
-			//result ^= nmulres;
 			result ^= nmul(po2A[i],po2B[j]);
 		}
 	}
-	debug<< "\t\t" << a << " (X) " << b << " = " << result<<endl;
 	return result;
 }
 
 ULL nmul_2_n(ULL n, ULL m)
 {
-	debug<<"  NMUL_2_N  ["<<n<<", "<<m<<"]"<<endl;
 	ULL logN = pseudo_log2(n);
 	ULL logM = pseudo_log2(m);
 	ULL po2LogN[6],po2LogM[6];
@@ -227,25 +234,21 @@ ULL nmul_2_n(ULL n, ULL m)
 		po2LogN[i] = 1<<po2LogN[i];
 		po2LogM[i] = 1<<po2LogM[i];
 	}
-	debug<<"\t\tPO2LOGN POWD{";print_ULL_array(po2LogN, 6);
-	debug<<"\t\tPO2LOGM POWD{";print_ULL_array(po2LogM, 6);
 	ULL fps_products[5];
 	bool diff_fpow = 1;
 	for(unsigned char c = 0; c < 5; c++)
 	{
 		unsigned int count = in_array(1<<(1<<c),po2LogN,6);
 		count += in_array(1<<(1<<c),po2LogM,6);
-		if(count > 1) {debug<<"\t\tMORE THAN ONE 2^(2^"<< (int)c << ") [ = " << (1<<(1<<c)) << "] count = " << count << endl;diff_fpow = 0;}
-		else{debug<<"\t\tONLY ONE OR NO 2^(2^"<< (int)c << ") [ = " << (1<<(1<<c)) << "] count = " << count << endl;};
+		if(count > 1) diff_fpow = 0;
 		fps_products[c] = 1;
 		for(unsigned int i = 0; i < count; i++)
 		{
 			fps_products[c] = nmul(fps_products[c], 1<<(1<<c));
 		}
 	}
-	debug<<"\t\tFPS PROD {";print_ULL_array(fps_products,5);
-	if(diff_fpow){ debug<<"\t\tALL WERE DIFF"<< endl; return product(fps_products,5);}
-	else{ debug<<"\t\tSOMETHING WERE EQUAL"<< endl; return nproduct(fps_products,5);}
+	if(diff_fpow)return product(fps_products,5);
+	else return nproduct(fps_products,5);
 }
 
 ULL nproduct(ULL *p, unsigned int size)
@@ -280,12 +283,10 @@ ULL product(ULL *p, unsigned int size)
 
 unsigned char po2(ULL n, ULL *p) // Provided array should at least be of size ceiling(log2(max_n))
 {
-	debug<<"  PO2  ["<<n<<"]"<<endl;
 	unsigned char i = 0;
 	ULL c = 1;
 	do
 	{
-//		debug << c << endl;
 		if(n & c)
 		{
 			p[i] = c;
@@ -293,13 +294,11 @@ unsigned char po2(ULL n, ULL *p) // Provided array should at least be of size ce
 		}
 		c*=2;
 	}while(c);
-	debug<<"\t\tPOWERS OF TWO {";print_ULL_array(p,i);
 	return i;
 }
 
 ULL bp2(ULL n)
 {
-	debug<<"  BP2  ["<<n<<"]"<<endl;
 	ULL c = MAX_POW2; // 2^63 -- TODO: probably not the best way, throws warning; Don't care
 	if(n & c) return c;
 	do
@@ -312,7 +311,6 @@ ULL bp2(ULL n)
 
 ULL pseudo_log2(ULL n)
 {
-	debug<<"  PSEUDO_LOG  ["<<n<<"]"<<endl;
 	// Not really log2, but will only be used if a = 2^n anyway. Allows me to get away without any dependecies (other than output)
 	unsigned char i = 0;
 	ULL c = 1;
@@ -331,18 +329,18 @@ ULL pseudo_log2(ULL n)
 
 bool is_fp(ULL n)
 {
-	return (n == 1 || n == 2 || n == 4 || n == 16 || n == 256 || n == 65536 || n == 4294967296);
+	return (n == 1 || n == 2 || n == 4 || n == 16 || n == 256 || n == 65536);
 }
-
-void print_ULL_array(ULL *l, unsigned int size)
+/*
+void print_ULL_array(ULL l[], unsigned int size)
 {
 	for(unsigned int i = 0; i < size; i++)
 	{
-		debug << l[i] << ", ";
+		cout << l[i] << ", ";
 	}
-	debug << endl;
+	cout << endl;
 }
-
+*/
 void clear_list(ULL *p, unsigned int size)
 {
 	for(unsigned int i = 0; i < size; i++)
@@ -369,3 +367,6 @@ bool elem(char c, char *p, unsigned int size)
 	}
 	return false;
 }
+
+
+
