@@ -38,8 +38,8 @@ int main()
 {	
 	cout	<<	"NIM multiplication and addition\n"
 				<<	"-------------------------------\n"
-				<<	"Numbers are in base 10, use \"+\" for NIM-Addition (XOR)\n"
-				<<	"and \"x\" for NIM-Multiplication. Parathesises aren't supported (yet)\n"
+				<<	"Numbers are in base 10, use \"" << ADDCHAR <<"\" for NIM-Addition (XOR)\n"
+				<<	"and \""<< MULCHAR <<"\" for NIM-Multiplication. Parathesises aren't supported (yet)\n"
 				<<	"Example: \"8x8+2x4x16\"\n"
 				<<	"Type \"exit\" to exit\n"
 				<< endl;
