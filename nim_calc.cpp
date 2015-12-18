@@ -5,6 +5,8 @@
 #define debug			if(DO_DEBUG)cout
 #define DFUQ			2362363213 // Random constant. Used for "Bad input".
 #define MAX_POW2	0x8000000000000000 // 2^63
+#define ADDCHAR		'+'
+#define MULCHAR		'x'
 
 const bool DO_DEBUG = 0; // Enables/Disables debug output. Should be disabled.
 
@@ -16,7 +18,7 @@ ULL evaluate_product(string term);
 ULL strtoULL(string s);
 unsigned char charToBase10(char c);
 ULL tenToThe(unsigned char power);
-char allowed_chars[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', 'x', '\0'};
+char allowed_chars[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ADDCHAR, MULCHAR, '\0'};
 //------------------------------------------
 ULL nmul(ULL a, ULL b);
 ULL nmul_2_n(ULL n, ULL m);
@@ -83,7 +85,7 @@ ULL evaluate_term(string term)
 	ULL result = 0;
 	for(unsigned int i = 0; i < term.length(); i++)
 	{
-		if(term[i] == '+')
+		if(term[i] == ADDCHAR)
 		{
 			result ^= evaluate_product(currentTerm);
 			currentTerm = "";
@@ -103,7 +105,7 @@ ULL evaluate_product(string term)
 	string currentNumber;
 	for(unsigned int i = 0; i < term.length(); i++)
 	{
-		if(term[i] == 'x')
+		if(term[i] == MULCHAR)
 		{
 			result = nmul(result, strtoULL(currentNumber));
 			currentNumber = "";
