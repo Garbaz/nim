@@ -1,6 +1,6 @@
-###What is this?
+###This is...
 
-This is a simple program to calculate terms in the "nim-world".
+... a simple program to calculate terms in the "nim-world".
 
 Parenthesises aren't supported yet (v0.1).
 
