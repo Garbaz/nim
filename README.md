@@ -34,11 +34,10 @@ The code is ugly, inefficient and undocumented, but it does the job.
 
 ##### Required files:
 - nim_calc.cpp
-- compile.sh
 
 ##### Run:
 ```
-./compile.sh
+make
 ./nim_calc
 ```
 
@@ -59,7 +58,7 @@ The code is ugly, inefficient and undocumented, but it does the job.
 - Evaluate params (Non-Interactive mode)
 - Allow spaces (Just clear them out)
 - Port to Android (DONE, finally, took way too long. I hate Java)
-- Port to TI NSPIRE
+- Port to TI NSPIRE (DONE, see the ti_nspire
 
 ### LICENSE:
 
